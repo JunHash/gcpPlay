@@ -1,0 +1,32 @@
+resources:
+- name: np-playground
+  type: container.v1.cluster
+  properties:
+    zone: "us-east4-a"
+    cluster:
+      initialClusterVersion: "1.16.9-gke.6"
+      ## Can be used to update master version, even if the official docu states that this field is r/o.
+      ## ref: https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.zones.clusters
+      currentMasterVersion: "1.16.9-gke.6"
+      ## Initial NodePool config, change only for node count or node version changes.
+      nodePools:
+       - name: "np-playground-np"
+## Duplicates node pool config from v1.cluster section, to get it explicitly managed.
+- name: np-playground-np
+  type: container.v1.nodePool
+  properties:
+    zone: us-east4-a
+    ## This is very important, as its actually controls the creation order by adding implicit a dependsOn constraint.
+    ## ref: https://cloud.google.com/deployment-manager/docs/configuration/use-references
+    ## ref: https://cloud.google.com/deployment-manager/docs/configuration/create-explicit-dependencies
+    clusterId: $(ref.np-playground.name)
+    nodePool:
+      name: "np-playground-np"
+      initialNodeCount: 2
+      version: "1.16.9-gke.6"
+      config:
+        machineType: "e2-standard-4"
+        oauthScopes:
+          - https://www.googleapis.com/auth/logging.write
+          - https://www.googleapis.com/auth/monitoring
+          - https://www.googleapis.com/auth/ndev.clouddns.readwrite
