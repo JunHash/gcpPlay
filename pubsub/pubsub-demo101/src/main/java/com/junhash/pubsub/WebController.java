@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.google.cloud.pubsub.v1.Subscriber;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -60,9 +61,10 @@ public class WebController {
     public RedirectView publish(@RequestParam("topicName") String topicName,
                                 @RequestParam("message") String message, @RequestParam("count") int messageCount) {
         for (int i = 0; i < messageCount; i++) {
-            this.pubSubTemplate.publish(topicName, message);
+            //message json string
+            // add more attribute
+            this.pubSubTemplate.publish(topicName, message, ImmutableMap.of("oder", "1"));
         }
-
         return buildStatusView("Messages published asynchronously; status unknown.");
     }
 

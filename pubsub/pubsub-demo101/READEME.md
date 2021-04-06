@@ -26,4 +26,22 @@ curl -X POST "http://localhost:8080/createTopic?topicName=springboot-test" -H "a
 ```aidl
 curl -X POST "http://localhost:8080/createSubscription?subscriptionName=springboot-sub-test&topicName=springboot-test" -H "accept: */*"
 ```
+推送消息
+```aidl
+curl -X GET "http://localhost:8080/postMessage?count=2&message=test-spring&topicName=springboot-test" -H "accept: */*"
+```
 ## Code
+pubsub 标准数据schema   
+https://cloud.google.com/pubsub/docs/publisher#java
+```aidl
+{
+  "data": string,
+  "attributes": {
+    string: string,
+    ...
+  },
+  "messageId": string,
+  "publishTime": string,
+  "orderingKey": string
+}
+```
